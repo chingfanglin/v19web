@@ -68,7 +68,11 @@
     function signOut() {
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function() {
-            console.log('User signed out.');
+            console.log('Google User signed out.');
+        });
+
+        FB.logout(function(response) {
+            console.log('FB User signed out.');
         });
     }
 
@@ -127,8 +131,8 @@
         }, function(response) {
             console.log('ID: ' + response.id); // Do not send to your backend! Use an ID token instead.
             console.log('Name: ' + response.name);
-            console.log('ID: ' + response.gender); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + response.email);
+            console.log('gender: ' + response.gender); // Do not send to your backend! Use an ID token instead.
+            console.log('email: ' + response.email);
         });
     }
     </script>
