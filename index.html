@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>v19vue</title>
+    <script src="dist/js/vue.min.js"></script>
+    <script src="dist/js/jquery.min.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <link href="dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <style type="text/css" media="screen">
+    body {
+        background: url(./dist/img/taiwan.png) no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    
+    .browse .container,
+    .blind_dating .container {
+        padding-bottom: 0;
+    }
+    
+    .browse .textContainer {
+        height: 345px;
+        line-height: 340px;
+    }
+    
+    .textContainer h1 {
+        vertical-align: middle;
+        display: inline-block;
+    }
+    
+    .title {
+        font-family: fantasy, monospace;
+        font-size: 42px;
+        font-weight: bold;
+        color: #fff;
+    }
+    
+    @media (min-width: 768px) {
+        .navbar-nav.navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translatex(-50%);
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .row.vertical-align {
+            display: block;
+            /* Turn off the flexible box layout */
+        }
+    }
+    </style>
+    <script>
+    var GoogleAuth;
+    var SCOPE = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+
+    function handleClientLoad() {
+        // Load the API's client and auth2 modules.
+        // Call the initClient function after the modules load.
+        gapi.load('client:auth2', initClient);
+    }
+
+    function initClient() {
+        // Retrieve the discovery document for version 3 of Google Drive API.
+        // In practice, your app can retrieve one or more discovery documents.
+        var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+
+        // Initialize the gapi.client object, which app uses to make API requests.
+        // Get API key and client ID from API Console.
+        // 'scope' field specifies space-delimited list of access scopes.
+        gapi.client.init({
+            'apiKey': 'YOUR_API_KEY',
+            'discoveryDocs': [discoveryUrl],
+            'clientId': 'YOUR_CLIENT_ID',
+            'scope': SCOPE
+        }).then(function() {
+            GoogleAuth = gapi.auth2.getAuthInstance();
+
+            // Listen for sign-in state changes.
+            GoogleAuth.isSignedIn.listen(updateSigninStatus);
+
+            // Handle initial sign-in state. (Determine if user is already signed in.)
+            var user = GoogleAuth.currentUser.get();
+            setSigninStatus();
+
+            // Call handleAuthClick function when user clicks on
+            //      "Sign In/Authorize" button.
+            $('#sign-in-or-out-button').click(function() {
+                handleAuthClick();
+            });
+            $('#revoke-access-button').click(function() {
+                revokeAccess();
+            });
+        });
+    }
+
+    function handleAuthClick() {
+        if (GoogleAuth.isSignedIn.get()) {
+            // User is authorized and has clicked 'Sign out' button.
+            GoogleAuth.signOut();
+        } else {
+            // User is not signed in. Start Google auth flow.
+            GoogleAuth.signIn();
+        }
+    }
+
+    function revokeAccess() {
+        GoogleAuth.disconnect();
+    }
+
+    function setSigninStatus(isSignedIn) {
+        var user = GoogleAuth.currentUser.get();
+        var isAuthorized = user.hasGrantedScopes(SCOPE);
+        if (isAuthorized) {
+            $('#sign-in-or-out-button').html('Sign out');
+            $('#revoke-access-button').css('display', 'inline-block');
+            $('#auth-status').html('You are currently signed in and have granted ' +
+                'access to this app.');
+        } else {
+            $('#sign-in-or-out-button').html('Sign In/Authorize');
+            $('#revoke-access-button').css('display', 'none');
+            $('#auth-status').html('You have not authorized this app or you are ' +
+                'signed out.');
+        }
+    }
+
+    function updateSigninStatus(isSignedIn) {
+        setSigninStatus();
+    }
+    </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+</head>
+
+<body>
+    <button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
+    <button id="revoke-access-button" style="display: none; margin-left: 25px">Revoke access</button>
+    <div id="auth-status" style="display: inline; padding-left: 25px"></div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">好好租</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-center">
+                    <li><a href="#">系統功能</a></li>
+                    <li><a href="#">如何取得</a></li>
+                    <li><a href="#">聯絡我們</a></li>
+                    <li><a href="#">房客APP</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" data-toggle="modal" data-target="#exampleModal">登入</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#exampleModal">註冊</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container text-center">
+        <section id="browse" class="browse">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 textContainer">
+                        <h1 class="title">建立租貸新關係</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="form-control-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
