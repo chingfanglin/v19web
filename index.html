@@ -106,8 +106,6 @@
                 <div class="row">
                     <div class="col-xs-12 textContainer">
                         <h1 class="title">建立租貸新關係</h1>
-                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                        <a href="#" onclick="signOut();">Sign out</a>
                     </div>
                 </div>
             </div>
@@ -123,6 +121,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <div class="g-signin2" data-onsuccess="onSignIn">Google登入</div>
+                        <a href="#" onclick="signOut();">test Sign out</a>
+                    </div>
                     <form>
                         <div class="form-group">
                             <label for="recipient-name" class="form-control-label">Recipient:</label>
