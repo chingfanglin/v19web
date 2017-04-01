@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <div class="form-group">
+        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+        </fb:login-button>
+    </div>
+    <div class="form-group">
+        <div class="g-signin2" data-onsuccess="onSignIn">Google登入</div>
+        <a href="#" onclick="signOut();">test Sign out</a>
+    </div>
+</body>
+
+</html>
