@@ -1,214 +1,97 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html><head><meta charset=utf-8><title>db_market</title><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui"><meta content=yes name=apple-mobile-web-app-capable><meta name=apple-mobile-web-app-status-bar-style content=black-translucent><meta content=black name=apple-mobile-web-app-status-bar-style><meta name=google-signin-client_id content=235636347022-469gn45ksk95t6jrrcnsd3aa6p9ru5f1.apps.googleusercontent.com><script src=http://g.tbcdn.cn/mtb/lib-flexible/0.3.2/??flexible_css.js,flexible.js></script><style media=screen>.abcRioButtonLightBlue {
+      width: 100% !important;
+    }</style><link href=./static/css/app.5f29aef0a7d33f1187871c33b2c9f0b5.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=./static/js/manifest.96d9d4e395012c26e28c.js></script><script type=text/javascript src=./static/js/vendor.04e86702dbd4d17cd3bd.js></script><script type=text/javascript src=./static/js/app.f5ae5ce718b752f94075.js></script></body><script type=text/javascript>function onSuccess(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // Th
+  }
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google-signin-client_id" content="235636347022-469gn45ksk95t6jrrcnsd3aa6p9ru5f1.apps.googleusercontent.com">
-    <title>v19vue</title>
-    <script src="dist/js/vue.min.js"></script>
-    <script src="dist/js/jquery.min.js"></script>
-    <script src="dist/js/bootstrap.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <link href="dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="dist/css/login.css" type="text/css" rel="stylesheet">
-    <style type="text/css" media="screen">
-    body {
-        background: url(./dist/img/taiwan.png) no-repeat center center fixed;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-        background-color: transparent;
+  function onFailure(error) {
+    console.log(error);
+  }
+
+  function renderButton() {
+    gapi.signin2.render('my-signin2', {
+      'scope': 'profile email',
+      'width': 240,
+      'height': 40,
+      'longtitle': false,
+      'theme': 'light',
+      'onsuccess': onSuccess,
+      'onfailure': onFailure
+    });
+  }
+
+
+
+  function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      fb_login();
     }
-    
-    .browse .container,
-    .blind_dating .container {
-        padding-bottom: 0;
-    }
-    
-    .browse .textContainer {
-        height: 345px;
-        line-height: 340px;
-    }
-    
-    .textContainer h1 {
-        vertical-align: middle;
-        display: inline-block;
-    }
-    
-    .title {
-        font-family: fantasy, monospace;
-        font-size: 42px;
-        font-weight: bold;
-        color: #fff;
-    }
-    
-    @media (min-width: 768px) {
-        .navbar-nav.navbar-center {
-            position: absolute;
-            left: 50%;
-            transform: translatex(-50%);
-        }
-    }
-    </style>
-    <script>
-    function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
+  }
 
-    function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function() {
-            console.log('Google User signed out.');
-        });
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '1769174903400749',
+      cookie: true, // enable cookies to allow the server to access
+      // the session
+      xfbml: true, // parse social plugins on this page
+      version: 'v2.8' // use graph api version 2.8
+    });
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  };
 
-        FB.logout(function(response) {
-            console.log('FB User signed out.');
-        });
-    }
+  function fb_login() {
+    FB.login(function(response) {
 
-
-    function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
-        // The response object is returned with a status field that lets the
-        // app know the current login status of the person.
-        // Full docs on the response object can be found in the documentation
-        // for FB.getLoginStatus().
-        if (response.status === 'connected') {
-            // Logged into your app and Facebook.
-            testAPI();
-        }
-    }
-
-
-    function checkLoginState() {
-        FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-        });
-    }
-
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId: '1769174903400749',
-            cookie: true, // enable cookies to allow the server to access 
-            // the session
-            xfbml: true, // parse social plugins on this page
-            version: 'v2.8' // use graph api version 2.8
-        });
-
-
-        FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-        });
-
-    };
-
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    // Here we run a very simple test of the Graph API after login is
-    // successful.  See statusChangeCallback() for when this call is made.
-    function testAPI() {
+      if (response.authResponse) {
         console.log('Welcome!  Fetching your information.... ');
+        //console.log(response); // dump complete info
+        access_token = response.authResponse.accessToken; //get access token
+        user_id = response.authResponse.userID; //get FB UID
+
         FB.api('/me', {
-            fields: 'id,name,gender,email'
+          fields: 'id,name,gender,email'
         }, function(response) {
-            console.log('ID: ' + response.id); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + response.name);
-            console.log('gender: ' + response.gender); // Do not send to your backend! Use an ID token instead.
-            console.log('email: ' + response.email);
+          console.log('ID: ' + response.id); // Do not send to your backend! Use an ID token instead.
+          console.log('Name: ' + response.name);
+          console.log('gender: ' + response.gender); // Do not send to your backend! Use an ID token instead.
+          console.log('email: ' + response.email);
         });
-    }
-    </script>
-</head>
 
-<body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">好好租</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-center">
-                    <li><a href="#">系統功能</a></li>
-                    <li><a href="#">如何取得</a></li>
-                    <li><a href="#">聯絡我們</a></li>
-                    <li><a href="#">房客APP</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" data-toggle="modal" data-target="#exampleModal">登入</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#exampleModal">註冊</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>還沒有帳號嗎? <a href="#">註冊</a></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <a href="#" class="btn btn-lg btn-primary btn-block">Facebook</a>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6" data-onsuccess="onSignIn">
-                            <a href="#" class="btn btn-lg btn-info btn-block" onclick="signOut();">Google</a>
-                        </div>
-                    </div>
-                    <div class="login-or">
-                        <hr class="hr-or">
-                        <span class="span-or">or</span>
-                    </div>
-                    <form>
-                        <div class="form-group">
-                            <label for="recipient-name" class="form-control-label">帳號:</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                        </div>
-                        <div class="form-group">
-                            <a class="pull-right" href="#">忘記密碼?</a>
-                            <label for="message-text" class="form-control-label">密碼:</label>
-                            <input class="form-control" id="message-text"></input>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">登入</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container text-center">
-        <section id="browse" class="browse">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 textContainer">
-                        <h1 class="title">建立租貸新關係</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</body>
+      } else {
+        //user hit cancel button
+        console.log('User cancelled login or did not fully authorize.');
 
-</html>
+      }
+    }, {
+      scope: 'publish_stream,email'
+    });
+  }
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.</script><script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer=defer></script></html>
